@@ -1,0 +1,164 @@
+@import url(http://fonts.googleapis.com/earlyaccess/notosanskr.css);
+
+@font-face {
+  font-family: "Brush Script Std";
+
+  src: url("fonts/BrushScriptStd.otf") format("truetype");
+}
+
+@font-face {
+  font-family: "SignPainter HouseScript";
+  font-style: normal;
+  font-weight: 400;
+  src: url("fonts/SignPainter.woff2") format("woff2"),
+    url("fonts/SignPainter.woff") format("woff"),
+    url("fonts/SignPainter.ttf") format("truetype"),
+    url("fonts/SignPainter.eot") format("embedded-opentype");
+}
+
+* {
+  font-family: "Noto Sans KR", sans-serif;
+}
+
+.cf::after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+*,
+:after,
+:before {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+p {
+  margin: 0;
+  padding: 0;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+ol,
+li,
+dl,
+dt,
+dd {
+  margin: 0;
+  padding: 0;
+}
+.h1,
+.h2,
+.h3,
+.h4,
+.h5,
+.h6,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+}
+
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.subQ_none {
+  display: block;
+}
+.subQ_block {
+  display: none;
+}
+.none {
+  display: none;
+}
+
+.block {
+  display: block;
+}
+
+.block.subQ_block {
+  display: none;
+}
+
+/*sub*/
+#sub_wrap {
+  width: 100%;
+  height: 100vh;
+  background: url(./main/main_bg.jpg) no-repeat;
+  background-size: cover;
+  position: relative;
+}
+
+/*header*/
+#header {
+  position: fixed;
+  top: 0;
+  z-index: 99;
+  padding-top: 35px;
+  width: 1165px;
+  right: 150px;
+}
+#header .header-menu {
+  margin-right: 150px;
+  float: left;
+}
+#header .header-menu li {
+  font-family: "SignPainter HouseScript";
+  font-size: 26.11px;
+  color: #7e934d;
+  float: left;
+  margin-right: 135px;
+}
+#header .header-menu li:last-child {
+  margin-right: 0;
+}
+#header .header-sns {
+  float: left;
+}
+#header .header-sns li {
+  float: left;
+}

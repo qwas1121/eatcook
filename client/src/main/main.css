@@ -1,0 +1,115 @@
+#MainWrap {
+  width: 100%;
+  height: 100vh;
+  background: url(./main_bg.jpg) no-repeat;
+  background-size: cover;
+  position: relative;
+}
+
+#path1 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 560px;
+}
+#path2 {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 175px;
+}
+
+#path3 {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 592px;
+}
+
+#path4 {
+  position: absolute;
+  left: -20px;
+  bottom: 95px;
+  width: 117px;
+}
+
+.leaf {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+}
+
+.main_text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+.main_text h2 {
+  color: #1f382a;
+  font-family: "Brush Script Std";
+}
+.main_text h1 {
+  margin-bottom: 65px;
+}
+.main_text button {
+  width: 185px;
+  height: 64px;
+  position: relative;
+  background-color: transparent;
+  border: none;
+  border-radius: 0;
+}
+.main_text button .main_btn {
+  width: 185px;
+  height: 64px;
+  background-color: #fff;
+  z-index: 3;
+  position: relative;
+  transform: all 0.8s cubic-bezier(1, 0, 0.25, 0.995);
+  transition: transform 0.8s cubic-bezier(1, 0, 0.25, 0.995);
+
+  border: 1px solid #1f392a;
+}
+.main_text button:hover .main_btn {
+  transform: translate(0.55556vw, 0.55556vw);
+  transition-timing-function: cubic-bezier(0.19, 1, 0.22, 1);
+}
+.main_text button p {
+  font-size: 15px;
+  color: #1f392a;
+  font-weight: 600;
+  position: absolute;
+  left: 15px;
+  bottom: 15px;
+  letter-spacing: -0.05em;
+}
+.main_text button img {
+  position: absolute;
+  top: 11px;
+  right: 12px;
+}
+/*
+.main_text button span::before {
+  content: "";
+  width: 100%;
+  height: 100%;
+  background-color: #fff;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+}
+*/
+.main_text button::after {
+  content: "";
+  width: 185px;
+  height: 64px;
+  border: 1px solid #1f392a;
+  background-color: #1f392a;
+  position: absolute;
+  top: 12px;
+  left: 17px;
+  z-index: 1;
+}

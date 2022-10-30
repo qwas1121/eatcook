@@ -43,21 +43,6 @@ const server = async () => {
         return res.status(500).send({ err: err.message });
       }
     });
-
-    router.post("/", async (req, res) => {
-      try {
-        let { name, like } = req.body;
-        if (!name) return res.status(400).send({ err: "name is required" });
-        if (typeof like !== "number")
-          return res.status(400).send({ err: "like must be a number" });
-        const foods = new Food(req.body);
-        await foods.save();
-        return res.send({ foods });
-      } catch (err) {
-        console.log(err);
-        return res.status(500).send({ err: err.message });
-      }
-    });
   } catch (err) {
     console.log(err);
   }
