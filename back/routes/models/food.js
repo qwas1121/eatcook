@@ -8,6 +8,7 @@ const FoodSchema = new Schema(
       type: [String],
       unique: true,
     },
+    likeOn: Boolean,
   },
   { timestamps: true }
 );

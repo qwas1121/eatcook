@@ -90,42 +90,24 @@ const server = async () => {
     router.post("/:name", async (req, res) => {
       var IP = requestIp.getClientIp(req);
       const { name } = req.params;
-      const { ip } = req.params;
+
       let post_list = await Food.findOne({ name: name });
-      let { like } = await Food.findOne({ name: name });
 
-      let { userIP } = await Food.findOne(
-        { name: name },
-        { $in: { ip: ["dd"] } }
-      );
-      console.log(userIP);
-
-      /*
-      try {
-        const guest = await Guest.findOne().where({
-          id: req.sessionID
-        }).exec();
-        // your cond logic, and update the object
-        await guest.save();
-        res.status(200).json(guest);
-      } catch (error) {
-        handleError(res, error.message);
-      }
-      */
+      const ipC = await Food.exists({ ip: IP });
 
       try {
-        query = req.body.like;
-        await Food.updateOne(
-          { name },
-          { $set: { like: query }, $addToSet: { ip: "aa" } }
-          //{ $addToSet: { userId: req.body.userId } }
-        );
-        await Food.updateOne();
-        const docToUpdate = Food.find().where("ip").in(["s"]);
-
-        console.log("좋아요 성공 !!");
-
-        res.send({ post_list });
+        if (ipC) {
+          console.log("no");
+          query = req.body.like;
+          await Food.updateOne(
+            { name },
+            { $set: { like: query }, $addToSet: { ip: IP } }
+            //{ $addToSet: { userId: req.body.userId } }
+          );
+          await Food.updateOne();
+          console.log("좋아요 성공 !!");
+        }
+        return res.send({ post_list });
       } catch (err) {
         console.log(err);
         return res.status(500).send({ err: err.message });
