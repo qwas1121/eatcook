@@ -4,6 +4,10 @@ const FoodSchema = new Schema(
   {
     name: { type: String, required: true },
     like: Number,
+    ip: {
+      type: [String],
+      unique: true,
+    },
   },
   { timestamps: true }
 );

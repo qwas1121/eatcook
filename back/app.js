@@ -9,6 +9,7 @@ var usersRouter = require("./routes/users");
 var naverRouter = require("./routes/naver");
 var dbRouter = require("./routes/db");
 var likeRouter = require("./routes/eatcook");
+var ipRouter = require("./routes/ipCheck");
 
 const cors = require("cors");
 var app = express();
@@ -30,6 +31,7 @@ app.use("/users", usersRouter);
 app.use("/naver", naverRouter);
 app.use("/db", dbRouter);
 app.use("/like", likeRouter);
+app.use("/ipCheck", ipRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

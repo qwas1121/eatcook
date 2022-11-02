@@ -11,16 +11,15 @@ const Result = () => {
   const food = searchParams.getAll("food");
   const [resultData, setResultData] = useState([]);
 
-  useEffect(() => {
-    const result = ResultData.filter((x, i) => {
-      for (var i in food) {
-        if (x.name === food[i]) {
-          return x.name;
-        }
-      }
-    });
+  const [like, setLike] = useState();
 
-    setResultData(result);
+  const test = (e) => {
+    setLike(e);
+  };
+
+  useEffect(() => {
+    //console.log(like);
+
     axios
       .get(`http://localhost:3001/like/${food}`)
       .then((response) => {
@@ -39,15 +38,19 @@ const Result = () => {
 
     //console.log("test : ", resultData);
 
-    axios
-      .get("http://127.0.0.1:3001/ipCheck")
-      .then((response) => {
-        console.log(response.data);
-      })
-      .catch((err) => {
-        console.log("다시 체크해주세요!");
-      });
-  }, [resultData.like]);
+    // const result = ResultData.find((s) => s.name === food[2]);
+    const result = ResultData.filter((x, i) => {
+      for (var i in food) {
+        if (x.name === food[i]) {
+          return x.name;
+        }
+      }
+    });
+
+    setResultData(result);
+  }, []);
+
+  // console.log(resultData);
 
   const slider = React.useRef(null);
 
@@ -61,58 +64,19 @@ const Result = () => {
   };
 
   // 좋아요
-
-  const [isLike, setIsLike] = useState(true);
-
-  function LikeBtn(aa, bb) {
-    if (isLike) {
-      setIsLike(false);
-      setResultData(
-        resultData.map((it) => (it.name === aa ? { ...it, like: bb + 1 } : it))
-      );
+  function LikeBtn() {
+    console.log(like);
+    if (like !== undefined) {
       axios
-        .post(`http://localhost:3001/like/${aa}`, {
-          like: bb + 1,
-        })
+        .post(`http://localhost:3001/like/${like}`)
         .then((response) => {
-          // console.log(response);
           //window.location.reload(); // 화면을 새로고침 한다.
         })
         .catch((err) => {
-          console.log("좋아요 오류!");
-        });
-    } else {
-      setIsLike(true);
-      setResultData(
-        resultData.map((it) => (it.name === aa ? { ...it, like: bb - 1 } : it))
-      );
-      axios
-        .post(`http://localhost:3001/like/${aa}`, {
-          like: bb - 1,
-        })
-        .then((response) => {
-          // console.log(response);
-          //window.location.reload(); // 화면을 새로고침 한다.
-        })
-        .catch((err) => {
-          console.log("좋아요 오류!");
+          console.log("다시 체크해주세요!");
         });
     }
   }
-  /*
-  function reLoad() {
-    axios
-      .get(`http://localhost:3001/like/${food}`)
-      .then((response) => {
-        //setResultData(resultData.concat(_resultData));
-        setResultData(response.data.foodFind);
-        console.log(resultData);
-      })
-      .catch((err) => {
-        console.log("좋아요 리로드 오류!");
-      });
-  }
-  */
 
   return (
     <>
@@ -149,13 +113,14 @@ const Result = () => {
 
                       <button
                         onClick={() => {
-                          LikeBtn(ele.name, ele.like);
+                          test(ele.name);
+
+                          LikeBtn();
                         }}
                       >
                         좋아요
                       </button>
                       {ele.like}
-
                       <KakaoShareButton food={food} />
                       <button onClick={() => navigate("/question")}>
                         <img src="./img/restart_btn.png" alt="다시하기" />
