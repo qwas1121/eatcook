@@ -87,7 +87,8 @@ const server = async () => {
     });
     //
     */
-    router.post("/:name", async (req, res) => {
+    //221103
+    /*router.post("/:name", async (req, res) => {
       var IP = requestIp.getClientIp(req);
       const { name } = req.params;
 
@@ -95,18 +96,92 @@ const server = async () => {
 
       const ipC = await Food.exists({ ip: IP });
 
+      const likeCheck = await Food.exists({ likeOn: IP });
+
+      // console.log("like", likeC);
       try {
-        if (ipC) {
-          console.log("no");
+        if (!likeCheck) {
           query = req.body.like;
           await Food.updateOne(
             { name },
-            { $set: { like: query }, $addToSet: { ip: IP } }
+            {
+              $set: { like: query },
+              $addToSet: { likeOn: IP },
+              $pull: { likeOff: IP },
+            }
             //{ $addToSet: { userId: req.body.userId } }
           );
           await Food.updateOne();
           console.log("좋아요 성공 !!");
+        } else {
+          query = req.body.like;
+          await Food.updateOne(
+            { name },
+            {
+              $set: { like: query },
+              $addToSet: { likeOff: IP },
+              $pull: { likeOn: IP },
+            }
+            //{ $addToSet: { userId: req.body.userId } }
+          );
+          await Food.updateOne();
+          console.log("좋아요 취소 !!");
         }
+        if (!ipC) {
+          console.log("no");
+        }
+
+        return res.send({ post_list });
+      } catch (err) {
+        console.log(err);
+        return res.status(500).send({ err: err.message });
+      }
+    });
+    */
+    router.post("/:name", async (req, res) => {
+      // var IP = requestIp.getClientIp(req);
+
+      var like = req.body.isLike;
+      var likenum = req.body.like;
+      //var Like = req.body.Like
+      const { name } = req.params;
+
+      let post_list = await Food.findOne({ name: name });
+
+      const likeCheck = await Food.exists({ likeOn: IP });
+
+      // console.log("like", likeC);
+      try {
+        if (!likeCheck) {
+          query = req.body.like;
+          var IP = req.body.ip;
+          await Food.updateOne(
+            { name },
+            {
+              $set: { like: query, isLike: like },
+              $addToSet: { likeOn: IP },
+              $pull: { likeOff: IP },
+            }
+            //{ $addToSet: { userId: req.body.userId } }
+          );
+          await Food.updateOne();
+          console.log("좋아요 성공 !!");
+        } else {
+          query = req.body.like;
+          var IP = req.body.ip;
+          await Food.updateOne(
+            { name },
+            {
+              $set: { like: query, isLike: like },
+              $addToSet: { likeOff: IP },
+              $pull: { likeOn: IP },
+            }
+            //{ $addToSet: { userId: req.body.userId } }
+          );
+          await Food.updateOne();
+          console.log("좋아요 취소 !!");
+        }
+
         return res.send({ post_list });
       } catch (err) {
         console.log(err);

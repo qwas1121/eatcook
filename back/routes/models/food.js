@@ -4,11 +4,10 @@ const FoodSchema = new Schema(
   {
     name: { type: String, required: true },
     like: Number,
-    ip: {
-      type: [String],
-      unique: true,
-    },
-    likeOn: Boolean,
+    //ip: { type: [String], unique: true,},
+    likeOn: { type: [String], unique: true },
+    likeOff: { type: [String], unique: true },
+    isLike: { type: Boolean, default: false },
   },
   { timestamps: true }
 );

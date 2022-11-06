@@ -11,9 +11,6 @@ const Result = () => {
   const food = searchParams.getAll("food");
   const [resultData, setResultData] = useState([]);
 
-  const [ip, setIp] = useState("");
-
-  const [isLike, setIsLike] = useState(resultData.isLike);
   useEffect(() => {
     const result = ResultData.filter((x, i) => {
       for (var i in food) {
@@ -33,34 +30,25 @@ const Result = () => {
           name: rowData.name,
           like: rowData.like,
           likeOn: rowData.likeOn,
-          isLike: rowData.isLike,
         }));
-
         const _ip = response.data.foodFind.map((rowData) => ({
           likeOn: rowData.likeOn,
         }));
-
-        setIsLike(_resultData.isLike);
-        console.log(response.data.foodFind);
         console.log("data : ", _ip);
         setResultData(resultData.concat(_resultData));
       })
       .catch((err) => {
         console.log("다시 체크해주세요!");
       });
-    console.log("like?", isLike);
+
     axios
       .get("http://127.0.0.1:3001/ipCheck")
       .then((response) => {
-        // console.log(response.data);
-        setIp(response.data.ip);
-        // console.log("A:", response.data.ip);
+        console.log(response.data);
       })
       .catch((err) => {
         console.log("ip 확인 실패!");
       });
-
-    console.log(resultData);
   }, [resultData.like]);
 
   const slider = React.useRef(null);
@@ -76,20 +64,17 @@ const Result = () => {
 
   // 좋아요
 
+  const [isLike, setIsLike] = useState(true);
+
   function LikeBtn(aa, bb) {
-    //console.log(ip);
-    if (!isLike) {
-      setIsLike(true);
+    if (isLike) {
+      setIsLike(false);
       setResultData(
-        resultData.map((it) =>
-          it.name === aa ? { ...it, like: bb + 1, isLike: true } : it
-        )
+        resultData.map((it) => (it.name === aa ? { ...it, like: bb + 1 } : it))
       );
       axios
         .post(`http://localhost:3001/like/${aa}`, {
           like: bb + 1,
-          ip: ip,
-          isLike: true,
         })
         .then((response) => {
           // console.log(response);
@@ -99,17 +84,13 @@ const Result = () => {
           console.log("좋아요 오류!");
         });
     } else {
-      setIsLike(false);
+      setIsLike(true);
       setResultData(
-        resultData.map((it) =>
-          it.name === aa ? { ...it, like: bb - 1, isLike: false } : it
-        )
+        resultData.map((it) => (it.name === aa ? { ...it, like: bb - 1 } : it))
       );
       axios
         .post(`http://localhost:3001/like/${aa}`, {
           like: bb - 1,
-          ip: ip,
-          isLike: false,
         })
         .then((response) => {
           // console.log(response);
@@ -173,7 +154,7 @@ const Result = () => {
                           LikeBtn(ele.name, ele.like);
                         }}
                       >
-                        {ele.isLike ? "좋아요했음" : "좋아요해줘"}
+                        좋아요
                       </button>
                       {ele.like}
 
