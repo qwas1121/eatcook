@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from "react";
+import React, { useEffect, useCallback, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { ResultData } from "./data/resultdata";
 import Slider from "react-slick";
@@ -44,6 +44,19 @@ const Result = () => {
     arrows: false,
   };
 
+  // 좋아요
+  const [like, setLike] = useState(0);
+  const [isLike, setIsLike] = useState(false);
+
+  function LikeBtn() {
+    if (!isLike) {
+      setLike(like + 1);
+      setIsLike(true);
+    } else {
+      alert("이미 좋아요를 눌렀습니다");
+    }
+  }
+
   return (
     <>
       <div id="sub_wrap">
@@ -76,9 +89,8 @@ const Result = () => {
                       <button>
                         <img src="./img/like_btn.png" alt="좋아요" />
                       </button>
-
+                      <button onClick={LikeBtn}> 👍 </button> {like}
                       <KakaoShareButton food={food} />
-
                       <button onClick={() => navigate("/question")}>
                         <img src="./img/restart_btn.png" alt="다시하기" />
                       </button>

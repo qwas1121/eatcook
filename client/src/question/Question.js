@@ -22,7 +22,6 @@ const Question = () => {
 
   const handleClickButton = (no, type) => {
     const newScore = totalScore.filter((s) => s.contents.includes(type));
-
     setTotalScore(newScore);
     setSubQ(type);
 
@@ -49,7 +48,7 @@ const Question = () => {
         .sort((a, b) => (a.score > b.score ? -1 : 1))
         .map((item) => item.name);
 
-      console.log("newscore :", newScore);
+      //console.log("newscore :", test);
       // console.log(" food", food);
 
       const food = test;

@@ -138,6 +138,8 @@ const server = async () => {
       }
     });
     */
+    /*
+   //221107
     router.post("/:name", async (req, res) => {
       // var IP = requestIp.getClientIp(req);
 
@@ -188,6 +190,42 @@ const server = async () => {
         return res.status(500).send({ err: err.message });
       }
     });
+    */
+
+    router.post("/:name", async (req, res) => {
+      // var IP = requestIp.getClientIp(req);
+
+      var like = req.body.isLike;
+      var likenum = req.body.like;
+      //var Like = req.body.Like
+      const { name } = req.params;
+
+      let post_list = await Food.findOne({ name: name });
+
+      const likeCheck = await Food.exists({ likeOn: IP });
+
+      // console.log("like", likeC);
+      try {
+        query = req.body.like;
+        var IP = req.body.ip;
+        await Food.updateOne(
+          { name },
+          {
+            $set: { like: query, isLike: like },
+            $addToSet: { likeOn: IP },
+            $pull: { likeOff: IP },
+          }
+          //{ $addToSet: { userId: req.body.userId } }
+        );
+        await Food.updateOne();
+        console.log("좋아요 성공 !!");
+        return res.send({ post_list });
+      } catch (err) {
+        console.log(err);
+        return res.status(500).send({ err: err.message });
+      }
+    });
+
     //
   } catch (err) {
     console.log(err);

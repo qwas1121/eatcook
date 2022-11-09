@@ -13,7 +13,8 @@ const Result = () => {
 
   const [ip, setIp] = useState("");
 
-  const [isLike, setIsLike] = useState(resultData.isLike);
+  const [isLike, setIsLike] = useState(false);
+
   useEffect(() => {
     const result = ResultData.filter((x, i) => {
       for (var i in food) {
@@ -40,7 +41,7 @@ const Result = () => {
           likeOn: rowData.likeOn,
         }));
 
-        setIsLike(_resultData.isLike);
+        console.log("test", response.data.foodFind);
         console.log(response.data.foodFind);
         console.log("data : ", _ip);
         setResultData(resultData.concat(_resultData));
@@ -61,6 +62,8 @@ const Result = () => {
       });
 
     console.log(resultData);
+
+    console.log("좋아요체크:", isLike);
   }, [resultData.like]);
 
   const slider = React.useRef(null);
@@ -76,10 +79,11 @@ const Result = () => {
 
   // 좋아요
 
-  function LikeBtn(aa, bb) {
+  function LikeBtn(aa, bb, cc) {
     //console.log(ip);
-    if (!isLike) {
-      setIsLike(true);
+    console.log(isLike);
+    if (!cc) {
+      setIsLike((cc) => true);
       setResultData(
         resultData.map((it) =>
           it.name === aa ? { ...it, like: bb + 1, isLike: true } : it
@@ -99,7 +103,7 @@ const Result = () => {
           console.log("좋아요 오류!");
         });
     } else {
-      setIsLike(false);
+      setIsLike((cc) => false);
       setResultData(
         resultData.map((it) =>
           it.name === aa ? { ...it, like: bb - 1, isLike: false } : it
@@ -155,7 +159,6 @@ const Result = () => {
             <Slider ref={slider} {...settings}>
               {resultData.map((ele) => (
                 <div key={ele.name} className="food_list">
-                  <div className="medal"></div>
                   <div className="food_list_inner">
                     <h2>How about this one?</h2>
                     <img src="./img/food_img.png" alt="" className="foodImg" />
@@ -170,14 +173,14 @@ const Result = () => {
 
                       <button
                         onClick={() => {
-                          LikeBtn(ele.name, ele.like);
+                          LikeBtn(ele.name, ele.like, ele.isLike);
                         }}
                       >
+                        {console.log("좋야요?", ele.isLike)}
                         {ele.isLike ? "좋아요했음" : "좋아요해줘"}
                       </button>
                       {ele.like}
 
-                      <KakaoShareButton food={food} />
                       <button onClick={() => navigate("/question")}>
                         <img src="./img/restart_btn.png" alt="다시하기" />
                       </button>
@@ -187,6 +190,7 @@ const Result = () => {
                 </div>
               ))}
             </Slider>
+            <KakaoShareButton food={food} />
           </div>
 
           <div></div>

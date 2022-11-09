@@ -43,7 +43,6 @@ function MapPop(props, getData, setSelectmap) {
 
   //select
   const [choosen, setChoosen] = useState();
-
   const [guselect, SetGuSelect] = useState();
   const [dongselect, SetDongSelect] = useState();
 
