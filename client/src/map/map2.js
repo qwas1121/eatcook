@@ -1,64 +1,80 @@
 /* global kakao */
 import React, { useEffect, useState } from "react";
-import "./map.css";
-import MapPop from "./mapPop";
-
+import "./map2.css";
 import axios from "axios";
+import {
+  useNavigate,
+  useSearchParams,
+  createSearchParams,
+} from "react-router-dom";
+
+import Slider from "react-slick";
 
 const { kakao } = window;
 
 const MapTest = (props) => {
-  const [map, setMap] = useState(null);
-  const [showPop, setShowPop] = useState(false);
-
   const [cityName, setCityName] = useState("");
 
-  function popShow() {
-    setShowPop(true);
-  }
+  const [locationObj, setLocationObj] = useState({});
 
-  function CityName() {
-    setCityName();
-  }
+  const [geolocation, setGeolocation] = useState({
+    lat: null,
+    long: null,
+  });
 
-  const searchPlace = cityName;
+  const [searchParams] = useSearchParams();
+  const food = searchParams.getAll("food");
+
+  function getLocation() {
+    let lat, long;
+    if (navigator.geolocation) {
+      // 위치 권한을 허용하면
+      navigator.geolocation.getCurrentPosition(
+        function (position) {
+          lat = position.coords.latitude;
+          long = position.coords.longitude;
+          setGeolocation((geolocation) => {
+            return {
+              ...geolocation,
+              lat,
+              long,
+            };
+          });
+        },
+        function (error) {
+          console.error(error);
+        },
+        {
+          enableHighAccuracy: false,
+          maximumAge: 0,
+          timeout: Infinity,
+        }
+      );
+    } else {
+      alert("위치 설정을 허용해주세요!");
+      return;
+    }
+  }
+  //슬라이더
+  const slider = React.useRef(null);
+
+  const settings = {
+    dots: false,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    arrows: false,
+  };
 
   //처음 지도 그리기
   useEffect(() => {
-    const container = document.getElementById("map");
-    const options = { center: new kakao.maps.LatLng(33.450701, 126.570667) };
-    const map = new kakao.maps.Map(container, options);
+    Map();
+  }, [cityName]);
 
-    const ps = new kakao.maps.services.Places();
-
-    ps.keywordSearch(searchPlace, placesSearchCB);
-
-    function placesSearchCB(data, status, pagination) {
-      if (status === kakao.maps.services.Status.OK) {
-        let bounds = new kakao.maps.LatLngBounds();
-
-        for (let i = 0; i < data.length; i++) {
-          //displayMarker(data[i]);
-          bounds.extend(new kakao.maps.LatLng(data[i].y, data[i].x));
-        }
-
-        map.setBounds(bounds);
-      }
-    }
-
-    /* function displayMarker(place) {
-      let marker = new kakao.maps.Marker({
-        map: map,
-        position: new kakao.maps.LatLng(place.y, place.x),
-      });
-    }
-    */
-
-    return;
-  }, [searchPlace]);
-  const [locationObj, setLocationObj] = useState({});
-  //내 위치
-  function myLocation() {
+  const Map = () => {
+    var infowindow = new kakao.maps.InfoWindow({ zIndex: 1 });
+    var markers = [];
     let mapContainer = document.getElementById("map");
     let mapOption = {
       center: new kakao.maps.LatLng(37.54450594119613, 127.06564792353285), // 지도의 중심좌표
@@ -90,17 +106,20 @@ const MapTest = (props) => {
           )
           .then((res) => {
             const location = res.data.documents[0];
-            setLocationObj({
-              si: location.address.region_1depth_name,
-              gu: location.address.region_2depth_name,
-              dong: location.address.region_3depth_name,
-              // locationX: location.address.x,
-              // locationY: location.address.y,
-            });
-          });
-        console.log(locationObj);
+            if (res.status === 200) {
+              setLocationObj({
+                si: location.address.region_1depth_name,
+                gu: location.address.region_2depth_name,
+                dong: location.address.region_3depth_name,
+                // locationX: location.address.x,
+                // locationY: location.address.y,
+              });
 
-        setCityName(locationObj.si + ` ` + locationObj.gu);
+              setCityName(
+                locationObj.si + ` ` + locationObj.gu + ` ` + locationObj.dong
+              );
+            }
+          });
       });
     } else {
       // HTML5의 GeoLocation을 사용할 수 없을때 마커 표시 위치와 인포윈도우 내용을 설정합니다
@@ -137,56 +156,78 @@ const MapTest = (props) => {
       // 지도 중심좌표를 접속위치로 변경합니다
       map.setCenter(locPosition);
     }
-  }
 
-  const getData = (cityName) => {
-    //console.log("지역" + cityName);
-    setCityName(cityName);
+    //검색
+    var markers = [];
+    const ps = new kakao.maps.services.Places();
+
+    // 키워드로 장소를 검색합니다
+    placesSearchCB();
+    ps.keywordSearch(cityName + food[2], placesSearchCB);
+
+    function placesSearchCB(data, status, pagination) {
+      if (status === kakao.maps.services.Status.OK) {
+        let bounds = new kakao.maps.LatLngBounds();
+
+        for (let i = 0; i < data.length; i++) {
+          displayMarker(data[i]);
+          bounds.extend(new kakao.maps.LatLng(data[i].y, data[i].x));
+        }
+
+        map.setBounds(bounds);
+      } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
+        alert("검색 결과가 존재하지 않습니다.");
+        return;
+      } else if (status === kakao.maps.services.Status.ERROR) {
+        alert("검색 결과 중 오류가 발생했습니다.");
+        return;
+      }
+    }
+
+    function displayMarker(place) {
+      let marker = new kakao.maps.Marker({
+        map: map,
+        position: new kakao.maps.LatLng(place.y, place.x),
+      });
+
+      kakao.maps.event.addListener(marker, "click", function () {
+        infowindow.setContent(
+          '<div style="padding:5px;font-size:12px;">' +
+            place.place_name +
+            "</div>"
+        );
+        infowindow.open(map, marker);
+      });
+    }
   };
-
-  // 위치 좌표를 텍스트로 변환
 
   return (
     <>
       <div id="map_container">
-        <div className="map_inner">
-          <div className="map_title">
-            <h1>Please set the current location.</h1>
-            <p>현재 위치를 설정해 주세요.</p>
-          </div>
-
-          <div id="map_cont">
-            <div id="map"></div>
-            <button
-              id="map_blur"
-              onClick={popShow}
-              className={cityName === "" ? "block" : "none"}
-            ></button>
-          </div>
-
-          <div className="cityname">
+        <div className="cont_inner">
+          <div className="title_wrap cf">
+            <h1>What eat today</h1>
             <p>
               <span>
                 <img src="./map_img/location_icon.png" alt="" />
               </span>
               {cityName}
-              <p>{locationObj.si}</p>
             </p>
           </div>
 
-          <button onClick={myLocation}>내위치</button>
-
-          <button
-            onClick={() => {
-              myLocation();
-            }}
-          >
-            테스트
-          </button>
+          <div id="map_cont" className="cf">
+            <div id="food_list">
+              <Slider ref={slider} {...settings}>
+                {food.map((ele) => (
+                  <div key={ele}>{ele}</div>
+                ))}
+              </Slider>
+            </div>
+            <div id="map"></div>
+            {/* <button onClick={placesSearchCB}>테스트</button> */}
+          </div>
         </div>
       </div>
-
-      {showPop ? <MapPop setShowPop={setShowPop} getData={getData} /> : null}
     </>
   );
 };

@@ -1,0 +1,60 @@
+#map_container .cont_inner {
+  width: 58%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 45px 40px 50px;
+  background-color: #fff;
+}
+
+#map_container .cont_inner .title_wrap {
+  position: relative;
+  margin-bottom: 25px;
+}
+#map_container .cont_inner .title_wrap h1 {
+  font-family: "Brush Script Std";
+  font-size: 43px;
+  color: #1f392a;
+  float: left;
+}
+
+#map_container .cont_inner .title_wrap p {
+  font-size: 15px;
+  width: 246px;
+  text-align: center;
+  color: #1f392a;
+  border: 1px solid rgba(0, 0, 0, 0.36);
+  padding: 3px 0 4px;
+  border-radius: 13px;
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+}
+
+#map_container .cont_inner .title_wrap p span {
+  display: inline-block;
+  margin-right: 6px;
+}
+
+#map_cont {
+  height: 336px;
+}
+#map_cont > div {
+  float: left;
+  height: 100%;
+}
+
+#food_list {
+  width: 29%;
+  margin-right: 2%;
+  background-color: #f8c165;
+}
+
+#food_list div {
+  height: 100%;
+}
+#map {
+  width: 69%;
+}
