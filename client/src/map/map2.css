@@ -58,3 +58,7 @@
 #map {
   width: 69%;
 }
+
+#map .marker {
+  background-color: gray;
+}
