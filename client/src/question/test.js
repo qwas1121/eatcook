@@ -1,11 +1,11 @@
 import React, { Fragment, useState } from "react";
 import { Input } from "antd";
-import MovieCard from "../map/crawling";
+import MovieCard from "./card";
 import axios from "axios";
 const { Search } = Input;
 
 const SearchTest = () => {
-  const [query, setQuery] = useState("목동");
+  const [query, setQuery] = useState("");
   const handleQuery = (e) => {
     setQuery(e.target.value);
   };
@@ -45,8 +45,6 @@ const SearchTest = () => {
       <div>
         {items &&
           items.map((item) => {
-            item.title = item.title.replace(/<b>/g, "");
-            item.title = item.title.replace(/<\/b>/g, "");
             return <MovieCard item={item}></MovieCard>;
           })}
       </div>
