@@ -10,6 +10,7 @@ import Header from "./header";
 //test
 import Map2 from "./map/map2";
 import Map3 from "./map/map3";
+import SearchTest from "./question/test";
 
 function App() {
   return (
@@ -23,6 +24,8 @@ function App() {
         <Route path="/map" element={<Map />} />
         <Route path="/map2" element={<Map2 />} />
         <Route path="/map3" element={<Map3 />} />
+
+        <Route path="/test" element={<SearchTest />} />
       </Routes>
     </>
   );

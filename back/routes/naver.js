@@ -1,36 +1,38 @@
+// 네이버 검색 API예제는 블로그를 비롯 전문자료까지 호출방법이 동일하므로 blog검색만 대표로 예제를 올렸습니다.
+// 네이버 검색 Open API 예제 - 블로그 검색
 var express = require("express");
 var router = express.Router();
+var client_id = "CcwyHEwBJHEY3uLjfbyI";
+var client_secret = "EaZ46lLLIy";
+router.get("/", function (req, res) {
+  var api_url =
+    "https://openapi.naver.com/v1/search/blog?display=30&query=" +
+    encodeURI(req.query.query); // json 결과
+  //   var api_url = 'https://openapi.naver.com/v1/search/blog.xml?query=' + encodeURI(req.query.query); // xml 결과
+  var request = require("request");
+  var options = {
+    url: api_url,
+    path: api_url,
+    headers: {
+      "X-Naver-Client-Id": client_id,
+      "X-Naver-Client-Secret": client_secret,
+    },
+  };
+  request.get(options, function (error, response, body) {
+    let query = req.query.query;
+    var searchText = encodeURIComponent(query);
+    options.path = api_url + searchText;
 
-var https = require("https");
-
-var CLIENT_ID = "CcwyHEwBJHEY3uLjfbyI";
-var CLIENT_SECRET = "EaZ46lLLIy";
-var API_URI = "/v1/search/blog.json?query=";
-
-var options = {
-  host: "openapi.naver.com",
-  port: 443,
-  path: API_URI,
-  method: "GET",
-  headers: {
-    "X-Naver-Client-Id": CLIENT_ID,
-    "X-Naver-Client-Secret": CLIENT_SECRET,
-  },
-};
-
-router.get("/", function (req, res, next) {
-  let query = req.query.query;
-  var searchText = encodeURIComponent(query);
-  options.path = API_URI + searchText;
-  var apiReq = https.request(options, function (apiRes) {
-    console.log("STATUS: " + apiRes.statusCode);
-    apiRes.setEncoding("utf8");
-    apiRes.on("data", function (chunk) {
-      res.setHeader("Content-Type", "application/json");
-      res.send(chunk);
-    });
+    if (!error && response.statusCode == 200) {
+      res.writeHead(200, { "Content-Type": "text/json;charset=utf-8" });
+      res.end(body);
+      console.log(query);
+      //console.log(body);
+    } else {
+      res.status(response.statusCode).end();
+      console.log("error = " + response.statusCode);
+    }
   });
-  apiReq.end();
 });
 
 module.exports = router;
