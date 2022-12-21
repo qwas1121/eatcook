@@ -3,7 +3,7 @@ import "./style.css";
 import { QuestionData } from "./data/questiondata.js";
 import { ResultData } from "./data/resultdata";
 import { createSearchParams, useNavigate } from "react-router-dom";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 
 import { Steps } from "antd";
 const { Step } = Steps;
@@ -12,18 +12,21 @@ const Question = () => {
   const [questionNo, setQuestionNo] = useState(0);
 
   const navigate = useNavigate();
-  const [totalScore, setTotalScore] = useState([]);
 
   const [subQ, setSubQ] = useState("");
 
+  const [result, setResult] = useState(ResultData);
   useEffect(() => {
-    setTotalScore(ResultData);
+    // setTotalScore(ResultData);
   }, []);
 
   const handleClickButton = (no, type) => {
-    const newScore = totalScore.filter((s) => s.contents.includes(type));
-    setTotalScore(newScore);
+    // const newScore = ResultData.filter((s) => s.contents.includes(type));
+    const newScore = result.filter((s) => s.contents.includes(type));
+    setResult(newScore);
     setSubQ(type);
+
+    console.log(newScore);
 
     if (QuestionData.length !== questionNo + 1) {
       if (QuestionData[questionNo].subquestion === false) {
@@ -42,16 +45,9 @@ const Question = () => {
       //setQuestionNo(questionNo + 1);
     } else {
       // food 도출
-      //const food = newScore.map((a) => (a.score === 2 ? a.name : ""));
-
-      const test = newScore
+      const food = result
         .sort((a, b) => (a.score > b.score ? -1 : 1))
         .map((item) => item.name);
-
-      //console.log("newscore :", test);
-      // console.log(" food", food);
-
-      const food = test;
 
       // 결과페이지 이동
       navigate({
@@ -99,7 +95,7 @@ const Question = () => {
             </div>
           </button>
 
-          {QuestionData[questionNo].answerc === null ? (
+          {QuestionData[questionNo].answerc === undefined ? (
             ""
           ) : (
             <button
@@ -115,6 +111,105 @@ const Question = () => {
                 <p>“{QuestionData[questionNo].answerc}”</p>
               </div>
             </button>
+          )}
+
+          {QuestionData[questionNo].answerd === undefined ? (
+            ""
+          ) : (
+            <>
+              <button
+                onClick={() =>
+                  handleClickButton(1, QuestionData[questionNo].answerd)
+                }
+              >
+                <div className="btn_inner">
+                  <img
+                    src="./img/main_btn_arrow.png"
+                    alt=""
+                    className="arrow"
+                  />
+                  <div className="img_wrap">
+                    <img src={QuestionData[questionNo].imaged} alt="" />
+                  </div>
+                  <p>“{QuestionData[questionNo].answerd}”</p>
+                </div>
+              </button>
+              <button
+                onClick={() =>
+                  handleClickButton(1, QuestionData[questionNo].answere)
+                }
+              >
+                <div className="btn_inner">
+                  <img
+                    src="./img/main_btn_arrow.png"
+                    alt=""
+                    className="arrow"
+                  />
+                  <div className="img_wrap">
+                    <img src={QuestionData[questionNo].imagee} alt="" />
+                  </div>
+                  <p>“{QuestionData[questionNo].answere}”</p>
+                </div>
+              </button>
+              <button
+                onClick={() =>
+                  handleClickButton(1, QuestionData[questionNo].answerf)
+                }
+              >
+                <div className="btn_inner">
+                  <img
+                    src="./img/main_btn_arrow.png"
+                    alt=""
+                    className="arrow"
+                  />
+                  <div className="img_wrap">
+                    <img src={QuestionData[questionNo].imagef} alt="" />
+                  </div>
+                  <p>“{QuestionData[questionNo].answerf}”</p>
+                </div>
+              </button>
+            </>
+          )}
+
+          {QuestionData[questionNo].answerg === undefined ? (
+            ""
+          ) : (
+            <>
+              <button
+                onClick={() =>
+                  handleClickButton(1, QuestionData[questionNo].answerg)
+                }
+              >
+                <div className="btn_inner">
+                  <img
+                    src="./img/main_btn_arrow.png"
+                    alt=""
+                    className="arrow"
+                  />
+                  <div className="img_wrap">
+                    <img src={QuestionData[questionNo].imageg} alt="" />
+                  </div>
+                  <p>“{QuestionData[questionNo].answerg}”</p>
+                </div>
+              </button>
+              <button
+                onClick={() =>
+                  handleClickButton(1, QuestionData[questionNo].answeri)
+                }
+              >
+                <div className="btn_inner">
+                  <img
+                    src="./img/main_btn_arrow.png"
+                    alt=""
+                    className="arrow"
+                  />
+                  <div className="img_wrap">
+                    <img src={QuestionData[questionNo].imagei} alt="" />
+                  </div>
+                  <p>“{QuestionData[questionNo].answeri}”</p>
+                </div>
+              </button>
+            </>
           )}
         </div>
         <div className="question_dots">

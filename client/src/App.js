@@ -4,13 +4,8 @@ import Question from "./question/Question";
 import Result from "./question/Result";
 import { Routes, Route } from "react-router-dom";
 import Main from "./main/Main";
-import Map from "./map/map";
-import Header from "./header";
 
-//test
-import Map2 from "./map/map2";
-import Map3 from "./map/map3";
-import SearchTest from "./question/test";
+import Header from "./header";
 
 function App() {
   return (
@@ -21,11 +16,6 @@ function App() {
         <Route path="/FoodTest" element={<Home />} />
         <Route path="/question" element={<Question />} />
         <Route path="/result" element={<Result />} />
-        <Route path="/map" element={<Map />} />
-        <Route path="/map2" element={<Map2 />} />
-        <Route path="/map3" element={<Map3 />} />
-
-        <Route path="/test" element={<SearchTest />} />
       </Routes>
     </>
   );

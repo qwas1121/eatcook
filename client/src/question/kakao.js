@@ -44,13 +44,6 @@ const KakaoShareButton = ({ food }) => {
               webUrl: window.location.href,
             },
           },
-          {
-            title: "앱으로 보기",
-            link: {
-              mobileWebUrl: window.location.href,
-              webUrl: window.location.href,
-            },
-          },
         ],
       });
     }

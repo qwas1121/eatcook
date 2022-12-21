@@ -7,7 +7,7 @@ var requestIp = require("request-ip");
 const e = require("express");
 
 const MONGO_URI =
-  "mongodb+srv://admin:DVVBJ3EmNYZQdYbm@eatcookdb.uzviiqa.mongodb.net/eatcookLike?retryWrites=true&w=majority";
+  "mongodb+srv://admin:UbFi7vmlH4cyXv0l@eatcookdb.uzviiqa.mongodb.net/eatcookLike?retryWrites=true&w=majority";
 
 const server = async () => {
   try {

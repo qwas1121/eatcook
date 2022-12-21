@@ -1,5 +1,5 @@
 /* global kakao */
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
 import "./map2.css";
 import axios from "axios";
 
@@ -14,6 +14,8 @@ import Crawling from "./crawling";
 import markerA from "./img/001.png";
 import markerB from "./img/002.png";
 
+import { FaChevronLeft } from "react-icons/fa";
+import { FaChevronRight } from "react-icons/fa";
 const { kakao } = window;
 
 const MapTest = (props) => {
@@ -45,6 +47,11 @@ const MapTest = (props) => {
   const [placeName, setPlaceName] = useState();
   //총 검색 수
   const [total, setTotal] = useState();
+  //음식점주소
+  const [placeAdd, setPlaceAdd] = useState();
+
+  //슬라이드
+  const slickRef2 = useRef(null);
 
   function getLocation() {
     let lat, long;
@@ -98,7 +105,22 @@ const MapTest = (props) => {
     slidesToScroll: 1,
     arrows: false,
     rows: 3,
+    appendDots: (dots) => (
+      <>
+        <div className="cr_nav">
+          <div className="arrows" onClick={crPrevious}>
+            <FaChevronLeft />
+          </div>
+          <ul>{dots}</ul>
+          <div className="arrows" onClick={crNext}>
+            <FaChevronRight />
+          </div>
+        </div>
+      </>
+    ),
   };
+  const crPrevious = useCallback(() => slickRef2.current.slickPrev(), []);
+  const crNext = useCallback(() => slickRef2.current.slickNext(), []);
 
   //처음 지도 그리기
   useEffect(() => {
@@ -107,7 +129,7 @@ const MapTest = (props) => {
   }, [cityName, cityName2, test, query, isText]);
 
   const handleButton = async (e) => {
-    console.log(e);
+    // console.log(e);
     try {
       const res = await axios.get("http://localhost:3001/naver/", {
         params: {
@@ -271,6 +293,8 @@ const MapTest = (props) => {
         handleButton(cityName + ` ` + test + ` ` + place.place_name);
         setPlaceName(place.place_name);
         setIsClick(true);
+
+        setPlaceAdd(place.road_address_name);
       });
 
       kakao.maps.event.addListener(marker, "mouseover", function () {
@@ -312,13 +336,25 @@ const MapTest = (props) => {
           </div>
           <div id="crawling" className={isClick ? "isCheck" : ""}>
             <div className="checked_cr">
-              <h3>{placeName}</h3>
-              <p>{total}</p>
-              <Slider {...settings2}>
+              <div className="place_title cf">
+                <h3>{placeName}</h3>
+                <div className="place_info cf">
+                  <p className="txt1">{placeAdd}</p>
+                  <p className="txt2">
+                    블로그리뷰 <span>{total}</span>
+                  </p>
+                </div>
+              </div>
+              <Slider {...settings2} ref={slickRef2}>
                 {items &&
                   items.map((item) => {
                     item.title = item.title.replace(/<b>/g, "");
                     item.title = item.title.replace(/<\/b>/g, "");
+                    item.title = item.title.replace(/&apos;/g, "'");
+                    item.title = item.title.replace(/&quot;/g, `"`);
+                    item.title = item.title.replace(/&amp;/g, "&");
+                    item.title = item.title.replace(/&lt;/g, "<");
+                    item.title = item.title.replace(/&gt;/g, ">");
                     return (
                       <div key={item}>
                         <Crawling item={item}></Crawling>

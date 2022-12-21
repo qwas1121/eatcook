@@ -137,7 +137,7 @@ h6 {
 #header {
   position: fixed;
   top: 0;
-  z-index: 99;
+  z-index: 9;
   padding-top: 35px;
   width: 1165px;
   right: 150px;

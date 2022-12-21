@@ -26,7 +26,7 @@ router.get("/", function (req, res) {
     if (!error && response.statusCode == 200) {
       res.writeHead(200, { "Content-Type": "text/json;charset=utf-8" });
       res.end(body);
-      console.log(query);
+      // console.log(query);
       //console.log(body);
     } else {
       res.status(response.statusCode).end();
