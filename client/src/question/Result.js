@@ -37,13 +37,12 @@ const Result = () => {
   const [resultNo, setResultNo] = useState();
 
   useEffect(() => {
-    console.log(food);
     if (food == "") {
       setResultNo(true);
     } else {
       setResultNo(false);
     }
-    console.log("result??", resultNo);
+
     const result = ResultData.filter((x, i) => {
       for (var i in food) {
         if (x.name === food[i]) {
@@ -63,6 +62,8 @@ const Result = () => {
           like: rowData.like,
           likeOn: rowData.likeOn,
           isLike: rowData.isLike,
+          text: rowData.text,
+          foodImg: rowData.foodImg,
         }));
 
         const _ip = response.data.foodFind.map((rowData) => ({
@@ -72,7 +73,9 @@ const Result = () => {
         // console.log("test", response.data.foodFind);
         // console.log(response.data.foodFind);
         // console.log("data : ", _ip);
-        setResultData(resultData.concat(_resultData));
+        setResultData(_resultData);
+
+        console.log(resultData.concat(_resultData));
       })
       .catch((err) => {
         console.log("다시 체크해주세요!");
@@ -103,6 +106,7 @@ const Result = () => {
     slidesToShow: 1,
     slidesToScroll: 1,
     arrows: false,
+    fade: true,
   };
 
   // 좋아요
@@ -210,10 +214,10 @@ const Result = () => {
                         alt=""
                         className="foodImg"
                       />
+                      {/* <img src={ele.foodImg} alt="" /> */}
                       <div className="text_wrap">
                         <p className="food_title">“{ele.name}”</p>
                         <p className="food_text">{ele.text}</p>
-                        <img src={ele.foodImg} alt="" />
                       </div>
                       <div className="btn_list">
                         <button
