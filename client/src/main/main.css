@@ -35,8 +35,11 @@
 
 .leaf {
   position: absolute;
-  left: 0;
+  left: 10px;
   bottom: 0;
+}
+.leaf img {
+  width: 400px;
 }
 
 .main_text {
@@ -49,6 +52,7 @@
 .main_text h2 {
   color: #1f382a;
   font-family: "Brush Script Std";
+  font-size: 60px;
 }
 .main_text h1 {
   margin-bottom: 65px;

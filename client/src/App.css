@@ -141,6 +141,8 @@ h6 {
   padding-top: 35px;
   width: 1165px;
   right: 150px;
+
+  display: none;
 }
 #header .header-menu {
   margin-right: 150px;

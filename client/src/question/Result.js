@@ -34,7 +34,16 @@ const Result = () => {
     setFoodName(food);
   };
 
+  const [resultNo, setResultNo] = useState();
+
   useEffect(() => {
+    console.log(food);
+    if (food == "") {
+      setResultNo(true);
+    } else {
+      setResultNo(false);
+    }
+    console.log("result??", resultNo);
     const result = ResultData.filter((x, i) => {
       for (var i in food) {
         if (x.name === food[i]) {
@@ -83,7 +92,7 @@ const Result = () => {
     // console.log(resultData);
 
     // console.log("좋아요체크:", isLike);
-  }, [resultData.like]);
+  }, [resultData.like, resultNo]);
 
   const slider = React.useRef(null);
 
@@ -170,68 +179,82 @@ const Result = () => {
   return (
     <>
       <div id="sub_wrap">
-        <div className="result_inner">
-          <div className="slider_wrap">
-            <button
-              onClick={() => slider?.current?.slickPrev()}
-              className="prev_btn slider_btn"
-            >
-              <img src="./img/slider_prev.png" alt="prev" />
-            </button>
-            <button
-              onClick={() => slider?.current?.slickNext()}
-              className="next_btn slider_btn"
-            >
-              <img src="./img/slider_next.png" alt="prev" />
-            </button>
-            <Slider ref={slider} {...settings}>
-              {resultData.map((ele) => (
-                <div key={ele.name} className="food_list">
-                  <div className="food_list_inner">
-                    <img src="./img/food_img.png" alt="" className="foodImg" />
-                    <div className="text_wrap">
-                      <p className="food_title">“{ele.name}”</p>
-                      <p className="food_text">{ele.text}</p>
-                      <img src={ele.foodImg} alt="" />
-                    </div>
-                    <div className="btn_list">
-                      <button
-                        onClick={() => {
-                          LikeBtn(ele.name, ele.like, ele.isLike);
-                        }}
-                      >
-                        {/* {console.log("좋야요?", ele.isLike)} */}
-                        {ele.isLike ? (
-                          <img src={likePics.isLike} />
-                        ) : (
-                          <img src={likePics.disLike} />
-                        )}
-                      </button>
-                      {ele.like}
-                    </div>
-                  </div>
-                  <div className="food_shadow"></div>
-                </div>
-              ))}
-            </Slider>
-          </div>
-          <div className="bt_btn">
-            <KakaoShareButton food={food} />
+        {resultNo ? (
+          <div className="resultNo">
+            <p>결과가 없습니다</p>
             <button onClick={() => navigate("/question")}>
               <img src="./img/restart_btn.png" alt="다시하기" />
             </button>
           </div>
-          <div className="bt_btn2">
-            {/* <button onClick={gotoList}>내 주변 맛집 리스트 보러가기</button> */}
-            <button onClick={popShow}>내 주변 맛집 리스트 보러가기</button>
+        ) : (
+          <div className="result_inner">
+            <div className="slider_wrap">
+              <button
+                onClick={() => slider?.current?.slickPrev()}
+                className="prev_btn slider_btn"
+              >
+                <img src="./img/slider_prev.png" alt="prev" />
+              </button>
+              <button
+                onClick={() => slider?.current?.slickNext()}
+                className="next_btn slider_btn"
+              >
+                <img src="./img/slider_next.png" alt="prev" />
+              </button>
+              <Slider ref={slider} {...settings}>
+                {resultData.map((ele) => (
+                  <div key={ele.name} className="food_list">
+                    <div className="food_list_inner">
+                      <img
+                        src="./img/food_img.png"
+                        alt=""
+                        className="foodImg"
+                      />
+                      <div className="text_wrap">
+                        <p className="food_title">“{ele.name}”</p>
+                        <p className="food_text">{ele.text}</p>
+                        <img src={ele.foodImg} alt="" />
+                      </div>
+                      <div className="btn_list">
+                        <button
+                          onClick={() => {
+                            LikeBtn(ele.name, ele.like, ele.isLike);
+                          }}
+                        >
+                          {/* {console.log("좋야요?", ele.isLike)} */}
+                          {ele.isLike ? (
+                            <img src={likePics.isLike} />
+                          ) : (
+                            <img src={likePics.disLike} />
+                          )}
+                        </button>
+                        {ele.like}
+                      </div>
+                    </div>
+                    <div className="food_shadow"></div>
+                  </div>
+                ))}
+              </Slider>
+            </div>
+            <div className="bt_btn">
+              <KakaoShareButton food={food} />
+              <button onClick={() => navigate("/question")}>
+                <img src="./img/restart_btn.png" alt="다시하기" />
+              </button>
+            </div>
+            <div className="bt_btn2">
+              {/* <button onClick={gotoList}>내 주변 맛집 리스트 보러가기</button> */}
+              <button onClick={popShow}>내 주변 맛집 리스트 보러가기</button>
+            </div>
           </div>
-        </div>
+        )}
       </div>
 
       <button
         className={"black_bg" + (showPop ? " show" : "")}
         onClick={() => setShowPop(false)}
       />
+
       {showPop ? <MapPop setShowPop={setShowPop} getData={getData} /> : null}
     </>
   );
