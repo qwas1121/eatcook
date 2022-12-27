@@ -4,7 +4,6 @@ var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 
-var indexRouter = require("./routes/index");
 var naverRouter = require("./routes/naver");
 var likeRouter = require("./routes/eatcook");
 var ipRouter = require("./routes/ipCheck");
@@ -26,7 +25,6 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
-app.use("/", indexRouter);
 app.use("/naver", naverRouter);
 app.use("/like", likeRouter);
 app.use("/ipCheck", ipRouter);
@@ -49,4 +47,18 @@ app.use(function (err, req, res, next) {
   res.render("error");
 });
 
+const PORT = 80;
+app.use(express.static(path.join(__dirname, "../client/build")));
+
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "../client/build", "index.html"));
+});
+
+const server = app.listen(PORT, () => {
+  console.log(`Start Server Port is : ${PORT}`);
+});
+
+app.get("*", function (req, res) {
+  res.sendFile(path.join(__dirname, "../client/build", "index.html"));
+});
 module.exports = app;
