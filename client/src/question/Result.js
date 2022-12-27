@@ -1,15 +1,11 @@
-import React, { useEffect, useCallback, useState } from "react";
-import {
-  useNavigate,
-  useSearchParams,
-  createSearchParams,
-} from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { ResultData } from "./data/resultdata";
 import Slider from "react-slick";
 import axios from "axios";
 import KakaoShareButton from "./kakao";
 
-import MapPop from "../map/map3";
+import MapPop from "../map/map";
 
 const Result = () => {
   const navigate = useNavigate();
@@ -26,18 +22,14 @@ const Result = () => {
   };
 
   const [showPop, setShowPop] = useState(false);
-  const [foodName, setFoodName] = useState();
   function popShow() {
     setShowPop(true);
   }
-  const getData = (food) => {
-    setFoodName(food);
-  };
 
   const [resultNo, setResultNo] = useState();
 
   useEffect(() => {
-    if (food == "") {
+    if (food === "") {
       setResultNo(true);
     } else {
       setResultNo(false);
@@ -75,7 +67,7 @@ const Result = () => {
         // console.log("data : ", _ip);
         setResultData(_resultData);
 
-        console.log(resultData.concat(_resultData));
+        //console.log(resultData.concat(_resultData));
       })
       .catch((err) => {
         console.log("다시 체크해주세요!");
@@ -171,20 +163,20 @@ const Result = () => {
   }
   */
 
-  function gotoList() {
-    navigate({
-      pathname: "/map3",
-      search: `?${createSearchParams({
-        food: food,
-      })}`,
-    });
-  }
+  // function gotoList() {
+  //   navigate({
+  //     pathname: "/map3",
+  //     search: `?${createSearchParams({
+  //       food: food,
+  //     })}`,
+  //   });
+  // }
 
   return (
     <>
       <div id="sub_wrap">
         {resultNo ? (
-          <div className="resultNo">
+          <div className="result_NO">
             <p>결과가 없습니다</p>
             <button onClick={() => navigate("/question")}>
               <img src="./img/restart_btn.png" alt="다시하기" />
@@ -259,7 +251,16 @@ const Result = () => {
         onClick={() => setShowPop(false)}
       />
 
-      {showPop ? <MapPop setShowPop={setShowPop} getData={getData} /> : null}
+      <button
+        className={"close_btn" + (showPop ? " show" : "")}
+        onClick={() => setShowPop(false)}
+      >
+        X
+      </button>
+
+      {showPop ? (
+        <MapPop setShowPop={setShowPop} resultData={resultData} />
+      ) : null}
     </>
   );
 };
