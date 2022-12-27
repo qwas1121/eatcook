@@ -5,9 +5,7 @@ var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 
 var indexRouter = require("./routes/index");
-var usersRouter = require("./routes/users");
 var naverRouter = require("./routes/naver");
-var dbRouter = require("./routes/db");
 var likeRouter = require("./routes/eatcook");
 var ipRouter = require("./routes/ipCheck");
 
@@ -29,9 +27,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/", indexRouter);
-app.use("/users", usersRouter);
 app.use("/naver", naverRouter);
-app.use("/db", dbRouter);
 app.use("/like", likeRouter);
 app.use("/ipCheck", ipRouter);
 

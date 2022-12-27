@@ -6,8 +6,7 @@ const { Food } = require("./models/food");
 var requestIp = require("request-ip");
 const e = require("express");
 
-const MONGO_URI =
-  "mongodb+srv://admin:UbFi7vmlH4cyXv0l@eatcookdb.uzviiqa.mongodb.net/eatcookLike?retryWrites=true&w=majority";
+const MONGO_URI = process.env.MONGO_URI;
 
 const server = async () => {
   try {
