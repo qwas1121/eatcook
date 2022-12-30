@@ -117,3 +117,103 @@
   left: 17px;
   z-index: 1;
 }
+
+@media (max-width: 1024px) {
+  #path1 {
+    width: 44.8vw;
+  }
+  #path2 {
+    width: 14vw;
+  }
+  #path3 {
+    width: 47.36vw;
+  }
+  #path4 {
+    width: 9.36vw;
+    left: -2vw;
+    bottom: 7vw;
+  }
+  .leaf img {
+    width: 40vw;
+  }
+  .main_text h1 img {
+    width: 67.04vw;
+  }
+  .main_text h2 {
+    font-size: 6.8vw;
+  }
+  .main_text button {
+    width: 26.43vw;
+    height: 9.14vw;
+  }
+  .main_text button .main_btn {
+    width: 26.43vw;
+    height: 9.14vw;
+  }
+  .main_text button p {
+    font-size: 3vw;
+    left: 2.5vw;
+    bottom: 2.5vw;
+  }
+  .main_text button::after {
+    width: 26.43vw;
+    height: 9.14vw;
+    top: 1.2vw;
+    left: 1.7vw;
+  }
+  .main_text button:hover .main_btn {
+    transform: translate(0);
+  }
+}
+
+/*media query - tablet*/
+@media (max-width: 990px) {
+}
+/*media query - mobile*/
+@media (max-width: 766px) {
+  #path1 {
+    width: 64.8vw;
+  }
+  #path2 {
+    width: 24vw;
+  }
+  #path3 {
+    width: 77.36vw;
+  }
+  #path4 {
+    display: none;
+  }
+  .leaf img {
+    display: none;
+  }
+  .main_text h1 img {
+    width: 90vw;
+  }
+  .main_text h2 {
+    font-size: 9vw;
+  }
+  .main_text button {
+    width: 38vw;
+    height: 14vw;
+  }
+  .main_text button .main_btn {
+    width: 100%;
+    height: 100%;
+  }
+  .main_text button p {
+    font-size: 3.7vw;
+    left: 3vw;
+    bottom: 3.5vw;
+  }
+  .main_text button::after {
+    width: 92%;
+    height: 100%;
+    top: 6%;
+    left: 7%;
+  }
+  .main_text button img {
+    width: 2.5vw;
+    top: 2vw;
+    right: 2vw;
+  }
+}

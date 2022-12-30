@@ -164,3 +164,20 @@ h6 {
 #header .header-sns li {
   float: left;
 }
+
+.m_none {
+  display: block;
+}
+.pc_none {
+  display: none;
+}
+
+/*media query - mobile*/
+@media (max-width: 766px) {
+  .m_none {
+    display: none;
+  }
+  .pc_none {
+    display: block;
+  }
+}

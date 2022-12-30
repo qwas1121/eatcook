@@ -1,17 +1,14 @@
-import React, { useEffect, useCallback, useState } from "react";
-import {
-  useNavigate,
-  useSearchParams,
-  createSearchParams,
-} from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { ResultData } from "./data/resultdata";
 import Slider from "react-slick";
 import axios from "axios";
 import KakaoShareButton from "./kakao";
 
-import MapPop from "../map/map3";
+import MapPop from "../map/map";
 
 const Result = () => {
+  const nodeURL = "http://localhost:3001";
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const food = searchParams.getAll("food");
@@ -26,18 +23,14 @@ const Result = () => {
   };
 
   const [showPop, setShowPop] = useState(false);
-  const [foodName, setFoodName] = useState();
   function popShow() {
     setShowPop(true);
   }
-  const getData = (food) => {
-    setFoodName(food);
-  };
 
   const [resultNo, setResultNo] = useState();
 
   useEffect(() => {
-    if (food == "") {
+    if (food === "") {
       setResultNo(true);
     } else {
       setResultNo(false);
@@ -53,10 +46,8 @@ const Result = () => {
 
     setResultData(result);
     axios
-      .get(`http://localhost:3001/like/${food}`)
+      .get(nodeURL + `/like/${food}`)
       .then((response) => {
-        //console.log("data : ", response.data.foodFind);
-        // setTest({ test: response.data.foodFind });
         const _resultData = response.data.foodFind.map((rowData) => ({
           name: rowData.name,
           like: rowData.like,
@@ -70,19 +61,14 @@ const Result = () => {
           likeOn: rowData.likeOn,
         }));
 
-        // console.log("test", response.data.foodFind);
-        // console.log(response.data.foodFind);
-        // console.log("data : ", _ip);
         setResultData(_resultData);
-
-        console.log(resultData.concat(_resultData));
       })
       .catch((err) => {
         console.log("다시 체크해주세요!");
       });
-    //console.log("like?", isLike);
+
     axios
-      .get("http://127.0.0.1:3001/ipCheck")
+      .get(nodeURL + "/ipCheck")
       .then((response) => {
         // console.log(response.data);
         setIp(response.data.ip);
@@ -91,10 +77,6 @@ const Result = () => {
       .catch((err) => {
         console.log("ip 확인 실패!");
       });
-
-    // console.log(resultData);
-
-    // console.log("좋아요체크:", isLike);
   }, [resultData.like, resultNo]);
 
   const slider = React.useRef(null);
@@ -122,7 +104,7 @@ const Result = () => {
         )
       );
       axios
-        .post(`http://localhost:3001/like/${aa}`, {
+        .post(nodeURL + `/like/${aa}`, {
           like: bb + 1,
           ip: ip,
           isLike: true,
@@ -142,7 +124,7 @@ const Result = () => {
         )
       );
       axios
-        .post(`http://localhost:3001/like/${aa}`, {
+        .post(process.env.NODE_URL + `/like/${aa}`, {
           like: bb - 1,
           ip: ip,
           isLike: false,
@@ -156,35 +138,12 @@ const Result = () => {
         });
     }
   }
-  /*
-  function reLoad() {
-    axios
-      .get(`http://localhost:3001/like/${food}`)
-      .then((response) => {
-        //setResultData(resultData.concat(_resultData));
-        setResultData(response.data.foodFind);
-        console.log(resultData);
-      })
-      .catch((err) => {
-        console.log("좋아요 리로드 오류!");
-      });
-  }
-  */
-
-  function gotoList() {
-    navigate({
-      pathname: "/map3",
-      search: `?${createSearchParams({
-        food: food,
-      })}`,
-    });
-  }
 
   return (
     <>
       <div id="sub_wrap">
         {resultNo ? (
-          <div className="resultNo">
+          <div className="result_NO">
             <p>결과가 없습니다</p>
             <button onClick={() => navigate("/question")}>
               <img src="./img/restart_btn.png" alt="다시하기" />
@@ -214,7 +173,7 @@ const Result = () => {
                         alt=""
                         className="foodImg"
                       />
-                      {/* <img src={ele.foodImg} alt="" /> */}
+
                       <div className="text_wrap">
                         <p className="food_title">“{ele.name}”</p>
                         <p className="food_text">{ele.text}</p>
@@ -225,7 +184,6 @@ const Result = () => {
                             LikeBtn(ele.name, ele.like, ele.isLike);
                           }}
                         >
-                          {/* {console.log("좋야요?", ele.isLike)} */}
                           {ele.isLike ? (
                             <img src={likePics.isLike} />
                           ) : (
@@ -247,7 +205,6 @@ const Result = () => {
               </button>
             </div>
             <div className="bt_btn2">
-              {/* <button onClick={gotoList}>내 주변 맛집 리스트 보러가기</button> */}
               <button onClick={popShow}>내 주변 맛집 리스트 보러가기</button>
             </div>
           </div>
@@ -259,7 +216,16 @@ const Result = () => {
         onClick={() => setShowPop(false)}
       />
 
-      {showPop ? <MapPop setShowPop={setShowPop} getData={getData} /> : null}
+      <button
+        className={"close_btn" + (showPop ? " show" : "")}
+        onClick={() => setShowPop(false)}
+      >
+        X
+      </button>
+
+      {showPop ? (
+        <MapPop setShowPop={setShowPop} resultData={resultData} />
+      ) : null}
     </>
   );
 };

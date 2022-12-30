@@ -2,8 +2,8 @@
 // 네이버 검색 Open API 예제 - 블로그 검색
 var express = require("express");
 var router = express.Router();
-var client_id = "CcwyHEwBJHEY3uLjfbyI";
-var client_secret = "EaZ46lLLIy";
+var client_id = process.env.NAVER_ID;
+var client_secret = process.env.NAVER_SECRET;
 router.get("/", function (req, res) {
   var api_url =
     "https://openapi.naver.com/v1/search/blog?display=30&query=" +
