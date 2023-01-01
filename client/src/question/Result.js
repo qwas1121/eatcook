@@ -30,9 +30,9 @@ const Result = () => {
   const [resultNo, setResultNo] = useState();
 
   useEffect(() => {
-    console.log(food);
+    //console.log(food);
 
-    console.log(resultNo);
+    // console.log(resultNo);
 
     const result = ResultData.filter((x, i) => {
       for (var i in food) {
