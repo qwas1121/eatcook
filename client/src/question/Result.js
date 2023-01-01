@@ -1,353 +1,237 @@
-import React from "react";
-import "./style.css";
-import { QuestionData } from "./data/questiondata.js";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { ResultData } from "./data/resultdata";
-import { createSearchParams, useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
+import Slider from "react-slick";
+import axios from "axios";
+import KakaoShareButton from "./kakao";
 
-import { Steps } from "antd";
-const { Step } = Steps;
+import MapPop from "../map/map";
 
-const Question = () => {
-  const [questionNo, setQuestionNo] = useState(0);
-
+const Result = () => {
+  const nodeURL = "http://13.125.36.134:3002";
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const food = searchParams.getAll("food");
+  const [resultData, setResultData] = useState([]);
 
-  const [subQ, setSubQ] = useState("");
+  const [ip, setIp] = useState("");
 
-  const [result, setResult] = useState(ResultData);
-  const [resultFood, setResultFood] = useState();
-
-  useEffect(() => {
-    // setTotalScore(ResultData);
-    //console.log(resultFood);
-  }, []);
-
-  const handleClickButton = (no, type) => {
-    // const newScore = ResultData.filter((s) => s.contents.includes(type));
-    const newScore = result.filter((s) => s.contents.includes(type));
-    setResult(newScore);
-    setSubQ(type);
-
-    //console.log(newScore);
-
-    if (QuestionData.length !== questionNo + 1) {
-      if (QuestionData[questionNo].subquestion === false) {
-        setQuestionNo(questionNo + 1);
-      } else {
-        setQuestionNo(questionNo + 0);
-        // console.log(subOn);
-
-        if (type === "육류") {
-          setQuestionNo(questionNo + 1);
-        } else {
-          setQuestionNo(questionNo + 2);
-        }
-      }
-
-      //setQuestionNo(questionNo + 1);
-    } else {
-      // food 도출
-      const food = newScore
-        .sort((a, b) => (a.score > b.score ? -1 : 1))
-        .map((item) => item.name);
-
-      // 결과페이지 이동
-      // navigate({
-      //   pathname: "/result",
-      //   search: `?${createSearchParams({
-      //     food: food,
-      //   })}`,
-      // });
-      setResultFood(food);
-    }
-    if (no === 8) {
-      const food = newScore
-        .sort((a, b) => (a.score > b.score ? -1 : 1))
-        .map((item) => item.name);
-
-      //결과페이지 이동
-      navigate({
-        pathname: "/result",
-        search: `?${createSearchParams({
-          food: food,
-        })}`,
-      });
-    }
+  const [isLike, setIsLike] = useState(false);
+  const likePics = {
+    isLike: "./img/like_btn.png",
+    disLike: "./img/like_btn_g.png",
   };
 
+  const [showPop, setShowPop] = useState(false);
+  function popShow() {
+    setShowPop(true);
+  }
+
+  const [resultNo, setResultNo] = useState();
+
+  useEffect(() => {
+    console.log(food);
+
+    console.log(resultNo);
+
+    const result = ResultData.filter((x, i) => {
+      for (var i in food) {
+        if (x.name === food[i]) {
+          return x.name;
+        }
+      }
+    });
+
+    if (result.length === 0) {
+      setResultNo(false);
+    } else {
+      setResultNo(true);
+    }
+
+    setResultData(result);
+    axios
+      .get(nodeURL + `/like/${food}`)
+      .then((response) => {
+        const _resultData = response.data.foodFind.map((rowData) => ({
+          name: rowData.name,
+          like: rowData.like,
+          likeOn: rowData.likeOn,
+          isLike: rowData.isLike,
+          text: rowData.text,
+          foodImg: rowData.foodImg,
+        }));
+
+        const _ip = response.data.foodFind.map((rowData) => ({
+          likeOn: rowData.likeOn,
+        }));
+
+        setResultData(_resultData);
+      })
+      .catch((err) => {
+        console.log("다시 체크해주세요!");
+      });
+
+    axios
+      .get(nodeURL + "/ipCheck")
+      .then((response) => {
+        // console.log(response.data);
+        setIp(response.data.ip);
+        // console.log("A:", response.data.ip);
+      })
+      .catch((err) => {
+        console.log("ip 확인 실패!");
+      });
+  }, [resultData.like, resultNo]);
+
+  const slider = React.useRef(null);
+
+  const settings = {
+    dots: false,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    arrows: false,
+    fade: true,
+  };
+
+  // 좋아요
+
+  function LikeBtn(aa, bb, cc) {
+    //console.log(ip);
+    // console.log(isLike);
+    if (!cc) {
+      setIsLike((cc) => true);
+      setResultData(
+        resultData.map((it) =>
+          it.name === aa ? { ...it, like: bb + 1, isLike: true } : it
+        )
+      );
+      axios
+        .post(nodeURL + `/like/${aa}`, {
+          like: bb + 1,
+          ip: ip,
+          isLike: true,
+        })
+        .then((response) => {
+          // console.log(response);
+          //window.location.reload(); // 화면을 새로고침 한다.
+        })
+        .catch((err) => {
+          console.log("좋아요 오류!");
+        });
+    } else {
+      setIsLike((cc) => false);
+      setResultData(
+        resultData.map((it) =>
+          it.name === aa ? { ...it, like: bb - 1, isLike: false } : it
+        )
+      );
+      axios
+        .post(process.env.NODE_URL + `/like/${aa}`, {
+          like: bb - 1,
+          ip: ip,
+          isLike: false,
+        })
+        .then((response) => {
+          // console.log(response);
+          //window.location.reload(); // 화면을 새로고침 한다.
+        })
+        .catch((err) => {
+          console.log("좋아요 오류!");
+        });
+    }
+  }
+
   return (
-    <div id="sub_wrap">
-      <div className={`button_no${questionNo} question_inner cf`}>
-        <div className="question_title">
-          <h2>Please choose the one you want.</h2>
-          <p>선택지중 원하시는걸 선택해주세요.</p>
-        </div>
-        <div className={`button_no${questionNo} question_list cf`}>
-          <button
-            className={`button_no${questionNo}`}
-            onClick={() =>
-              handleClickButton(
-                QuestionData[questionNo].id,
-                QuestionData[questionNo].answera
-              )
-            }
-          >
-            <div className="btn_inner">
-              <img src="./img/main_btn_arrow.png" alt="" className="arrow" />
-              <div className="img_wrap">
-                <img
-                  src={QuestionData[questionNo].imagea}
-                  alt=""
-                  className="m_none"
-                />
-                <img
-                  src={QuestionData[questionNo].mimagea}
-                  alt=""
-                  className="pc_none"
-                />
-              </div>
-              <p>“{QuestionData[questionNo].answera}”</p>
-            </div>
-          </button>
-
-          <button
-            className={`button_no${questionNo}`}
-            onClick={() => {
-              handleClickButton(
-                QuestionData[questionNo].id,
-                QuestionData[questionNo].answerb
-              );
-            }}
-          >
-            <div className="btn_inner">
-              <img src="./img/main_btn_arrow.png" alt="" className="arrow" />
-              <div className="img_wrap">
-                <img
-                  src={QuestionData[questionNo].imageb}
-                  alt=""
-                  className="m_none"
-                />
-                <img
-                  src={QuestionData[questionNo].mimageb}
-                  alt=""
-                  className="pc_none"
-                />
-              </div>
-              <p>“{QuestionData[questionNo].answerb}”</p>
-            </div>
-          </button>
-
-          {QuestionData[questionNo].answerc === undefined ? (
-            ""
-          ) : (
-            <button
-              className={`button_no${questionNo}`}
-              onClick={() =>
-                handleClickButton(
-                  QuestionData[questionNo].id,
-                  QuestionData[questionNo].answerc
-                )
-              }
-            >
-              <div className="btn_inner">
-                <img src="./img/main_btn_arrow.png" alt="" className="arrow" />
-                <div className="img_wrap">
-                  <img
-                    src={QuestionData[questionNo].imagec}
-                    alt=""
-                    className="m_none"
-                  />
-                  <img
-                    src={QuestionData[questionNo].mimagec}
-                    alt=""
-                    className="pc_none"
-                  />
-                </div>
-                <p>“{QuestionData[questionNo].answerc}”</p>
-              </div>
+    <>
+      <div id="sub_wrap">
+        {!resultNo ? (
+          <div className="result_NO">
+            <p>결과가 없습니다</p>
+            <button onClick={() => navigate("/question")}>
+              <img src="./img/restart_btn.png" alt="다시하기" />
             </button>
-          )}
+          </div>
+        ) : (
+          <div className="result_inner">
+            <div className="slider_wrap">
+              <button
+                onClick={() => slider?.current?.slickPrev()}
+                className="prev_btn slider_btn"
+              >
+                <img src="./img/slider_prev.png" alt="prev" />
+              </button>
+              <button
+                onClick={() => slider?.current?.slickNext()}
+                className="next_btn slider_btn"
+              >
+                <img src="./img/slider_next.png" alt="prev" />
+              </button>
+              <Slider ref={slider} {...settings}>
+                {resultData.map((ele) => (
+                  <div key={ele.name} className="food_list">
+                    <div className="food_list_inner">
+                      <img
+                        src="./img/food_img.png"
+                        alt=""
+                        className="foodImg"
+                      />
 
-          {QuestionData[questionNo].answerd === undefined ? (
-            ""
-          ) : (
-            <>
-              <button
-                className={`button_no${questionNo}`}
-                onClick={() =>
-                  handleClickButton(
-                    QuestionData[questionNo].id,
-                    QuestionData[questionNo].answerd
-                  )
-                }
-              >
-                <div className="btn_inner">
-                  <img
-                    src="./img/main_btn_arrow.png"
-                    alt=""
-                    className="arrow"
-                  />
-                  <div className="img_wrap">
-                    <img
-                      src={QuestionData[questionNo].imaged}
-                      alt=""
-                      className="m_none"
-                    />
-                    <img
-                      src={QuestionData[questionNo].mimaged}
-                      alt=""
-                      className="pc_none"
-                    />
+                      <div className="text_wrap">
+                        <p className="food_title">“{ele.name}”</p>
+                        <p className="food_text">{ele.text}</p>
+                      </div>
+                      <div className="btn_list">
+                        <button
+                          onClick={() => {
+                            LikeBtn(ele.name, ele.like, ele.isLike);
+                          }}
+                        >
+                          {ele.isLike ? (
+                            <img src={likePics.isLike} />
+                          ) : (
+                            <img src={likePics.disLike} />
+                          )}
+                        </button>
+                        {ele.like}
+                      </div>
+                    </div>
+                    <div className="food_shadow"></div>
                   </div>
-                  <p>“{QuestionData[questionNo].answerd}”</p>
-                </div>
+                ))}
+              </Slider>
+            </div>
+            <div className="bt_btn">
+              <KakaoShareButton food={food} />
+              <button onClick={() => navigate("/question")}>
+                <img src="./img/restart_btn.png" alt="다시하기" />
               </button>
-              <button
-                className={`button_no${questionNo}`}
-                onClick={() =>
-                  handleClickButton(
-                    QuestionData[questionNo].id,
-                    QuestionData[questionNo].answere
-                  )
-                }
-              >
-                <div className="btn_inner">
-                  <img
-                    src="./img/main_btn_arrow.png"
-                    alt=""
-                    className="arrow"
-                  />
-                  <div className="img_wrap">
-                    <img
-                      src={QuestionData[questionNo].imagee}
-                      alt=""
-                      className="m_none"
-                    />
-                    <img
-                      src={QuestionData[questionNo].mimagee}
-                      alt=""
-                      className="pc_none"
-                    />
-                  </div>
-                  <p>“{QuestionData[questionNo].answere}”</p>
-                </div>
-              </button>
-              <button
-                className={`button_no${questionNo}`}
-                onClick={() =>
-                  handleClickButton(
-                    QuestionData[questionNo].id,
-                    QuestionData[questionNo].answerf
-                  )
-                }
-              >
-                <div className="btn_inner">
-                  <img
-                    src="./img/main_btn_arrow.png"
-                    alt=""
-                    className="arrow"
-                  />
-                  <div className="img_wrap">
-                    <img
-                      src={QuestionData[questionNo].imagef}
-                      alt=""
-                      className="m_none"
-                    />
-                    <img
-                      src={QuestionData[questionNo].mimagef}
-                      alt=""
-                      className="pc_none"
-                    />
-                  </div>
-                  <p>“{QuestionData[questionNo].answerf}”</p>
-                </div>
-              </button>
-            </>
-          )}
-
-          {QuestionData[questionNo].answerg === undefined ? (
-            ""
-          ) : (
-            <>
-              <button
-                className={`button_no${questionNo}`}
-                onClick={() => {
-                  handleClickButton(
-                    QuestionData[questionNo].id,
-                    QuestionData[questionNo].answerg
-                  );
-                }}
-              >
-                <div className="btn_inner">
-                  <img
-                    src="./img/main_btn_arrow.png"
-                    alt=""
-                    className="arrow"
-                  />
-                  <div className="img_wrap">
-                    <img
-                      src={QuestionData[questionNo].imageg}
-                      alt=""
-                      className="m_none"
-                    />
-                    <img
-                      src={QuestionData[questionNo].mimageg}
-                      alt=""
-                      className="pc_none"
-                    />
-                  </div>
-                  <p>“{QuestionData[questionNo].answerg}”</p>
-                </div>
-              </button>
-              <button
-                className={`button_no${questionNo}`}
-                onClick={() =>
-                  handleClickButton(
-                    QuestionData[questionNo].id,
-                    QuestionData[questionNo].answeri
-                  )
-                }
-              >
-                <div className="btn_inner">
-                  <img
-                    src="./img/main_btn_arrow.png"
-                    alt=""
-                    className="arrow"
-                  />
-                  <div className="img_wrap">
-                    <img
-                      src={QuestionData[questionNo].imagei}
-                      alt=""
-                      className="m_none"
-                    />
-                    <img
-                      src={QuestionData[questionNo].mimagei}
-                      alt=""
-                      className="pc_none"
-                    />
-                  </div>
-                  <p>“{QuestionData[questionNo].answeri}”</p>
-                </div>
-              </button>
-            </>
-          )}
-        </div>
-        <div className="question_dots">
-          <Steps progressDot current={questionNo}>
-            <Step />
-            <Step />
-            <Step />
-            <Step />
-            <Step />
-            <Step />
-            <Step />
-            <Step />
-          </Steps>
-        </div>
+            </div>
+            <div className="bt_btn2">
+              <button onClick={popShow}>내 주변 맛집 리스트 보러가기</button>
+            </div>
+          </div>
+        )}
       </div>
-    </div>
+
+      <button
+        className={"black_bg" + (showPop ? " show" : "")}
+        onClick={() => setShowPop(false)}
+      />
+
+      <button
+        className={"close_btn" + (showPop ? " show" : "")}
+        onClick={() => setShowPop(false)}
+      >
+        X
+      </button>
+
+      {showPop ? (
+        <MapPop setShowPop={setShowPop} resultData={resultData} />
+      ) : null}
+    </>
   );
 };
 
-export default Question;
+export default Result;

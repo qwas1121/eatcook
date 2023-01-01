@@ -86,8 +86,8 @@ export const QuestionData = [
   },
   {
     id: 7,
-    answera: "차가운거",
-    answerb: "뜨거운거",
+    answera: "뜨거운거",
+    answerb: "차가운거",
     answerc: "상관없음",
     subquestion: false,
     imagea: "./img/questionImg/q7_a.png",
