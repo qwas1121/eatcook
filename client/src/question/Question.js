@@ -16,8 +16,11 @@ const Question = () => {
   const [subQ, setSubQ] = useState("");
 
   const [result, setResult] = useState(ResultData);
+  const [resultFood, setResultFood] = useState();
+
   useEffect(() => {
     // setTotalScore(ResultData);
+    console.log(resultFood);
   }, []);
 
   const handleClickButton = (no, type) => {
@@ -45,17 +48,27 @@ const Question = () => {
       //setQuestionNo(questionNo + 1);
     } else {
       // food 도출
-      const food = result
+      const food = newScore
         .sort((a, b) => (a.score > b.score ? -1 : 1))
         .map((item) => item.name);
 
       // 결과페이지 이동
-      navigate({
-        pathname: "/result",
-        search: `?${createSearchParams({
-          food: food,
-        })}`,
-      });
+      // navigate({
+      //   pathname: "/result",
+      //   search: `?${createSearchParams({
+      //     food: food,
+      //   })}`,
+      // });
+      setResultFood(food);
+      if (no === 8) {
+        //결과페이지 이동
+        navigate({
+          pathname: "/result",
+          search: `?${createSearchParams({
+            food: food,
+          })}`,
+        });
+      }
     }
   };
 
@@ -70,7 +83,10 @@ const Question = () => {
           <button
             className={`button_no${questionNo}`}
             onClick={() =>
-              handleClickButton(1, QuestionData[questionNo].answera)
+              handleClickButton(
+                QuestionData[questionNo].id,
+                QuestionData[questionNo].answera
+              )
             }
           >
             <div className="btn_inner">
@@ -94,7 +110,10 @@ const Question = () => {
           <button
             className={`button_no${questionNo}`}
             onClick={() => {
-              handleClickButton(1, QuestionData[questionNo].answerb);
+              handleClickButton(
+                QuestionData[questionNo].id,
+                QuestionData[questionNo].answerb
+              );
             }}
           >
             <div className="btn_inner">
@@ -121,7 +140,10 @@ const Question = () => {
             <button
               className={`button_no${questionNo}`}
               onClick={() =>
-                handleClickButton(1, QuestionData[questionNo].answerc)
+                handleClickButton(
+                  QuestionData[questionNo].id,
+                  QuestionData[questionNo].answerc
+                )
               }
             >
               <div className="btn_inner">
@@ -150,7 +172,10 @@ const Question = () => {
               <button
                 className={`button_no${questionNo}`}
                 onClick={() =>
-                  handleClickButton(1, QuestionData[questionNo].answerd)
+                  handleClickButton(
+                    QuestionData[questionNo].id,
+                    QuestionData[questionNo].answerd
+                  )
                 }
               >
                 <div className="btn_inner">
@@ -177,7 +202,10 @@ const Question = () => {
               <button
                 className={`button_no${questionNo}`}
                 onClick={() =>
-                  handleClickButton(1, QuestionData[questionNo].answere)
+                  handleClickButton(
+                    QuestionData[questionNo].id,
+                    QuestionData[questionNo].answere
+                  )
                 }
               >
                 <div className="btn_inner">
@@ -204,7 +232,10 @@ const Question = () => {
               <button
                 className={`button_no${questionNo}`}
                 onClick={() =>
-                  handleClickButton(1, QuestionData[questionNo].answerf)
+                  handleClickButton(
+                    QuestionData[questionNo].id,
+                    QuestionData[questionNo].answerf
+                  )
                 }
               >
                 <div className="btn_inner">
@@ -237,9 +268,12 @@ const Question = () => {
             <>
               <button
                 className={`button_no${questionNo}`}
-                onClick={() =>
-                  handleClickButton(1, QuestionData[questionNo].answerg)
-                }
+                onClick={() => {
+                  handleClickButton(
+                    QuestionData[questionNo].id,
+                    QuestionData[questionNo].answerg
+                  );
+                }}
               >
                 <div className="btn_inner">
                   <img
@@ -265,7 +299,10 @@ const Question = () => {
               <button
                 className={`button_no${questionNo}`}
                 onClick={() =>
-                  handleClickButton(1, QuestionData[questionNo].answeri)
+                  handleClickButton(
+                    QuestionData[questionNo].id,
+                    QuestionData[questionNo].answeri
+                  )
                 }
               >
                 <div className="btn_inner">
