@@ -20,7 +20,7 @@ const Question = () => {
 
   useEffect(() => {
     // setTotalScore(ResultData);
-    console.log(resultFood);
+    //console.log(resultFood);
   }, []);
 
   const handleClickButton = (no, type) => {
@@ -29,7 +29,7 @@ const Question = () => {
     setResult(newScore);
     setSubQ(type);
 
-    console.log(newScore);
+    //console.log(newScore);
 
     if (QuestionData.length !== questionNo + 1) {
       if (QuestionData[questionNo].subquestion === false) {
