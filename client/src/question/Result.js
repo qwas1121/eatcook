@@ -8,7 +8,7 @@ import KakaoShareButton from "./kakao";
 import MapPop from "../map/map";
 
 const Result = () => {
-  const nodeURL = "http://13.125.36.134:3002";
+  const nodeURL = "https://www.eatcook.today/api";
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const food = searchParams.getAll("food");
