@@ -579,7 +579,7 @@
   .slider_wrap .slick-list {
     width: 65%;
   }
-  #map_container,
+
   #sub_wrap {
     height: calc(var(--vh, 1vh) * 100);
   }
