@@ -69,6 +69,7 @@
   left: 50%;
   transform: translate(-50%, -50%);
   padding: 0 10px;
+  z-index: 1;
 }
 #food_list .food_arrows button {
   background-color: transparent;
@@ -427,7 +428,7 @@
     padding: 2vw 0;
   }
   #food_list .list_wrap .list_text .text1 {
-    font-size: 6.37vw;
+    font-size: 5.37vw;
   }
   #map {
     height: 70vw !important;
@@ -502,5 +503,9 @@
   }
   .marker_text {
     font-size: 12px;
+  }
+
+  #food_list .food_arrows img {
+    width: 2vw;
   }
 }

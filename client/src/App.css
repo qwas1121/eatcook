@@ -171,7 +171,14 @@ h6 {
 .pc_none {
   display: none;
 }
-
+.table_block {
+  display: none;
+}
+@media (max-width: 1024px) {
+  .table_block {
+    display: block;
+  }
+}
 /*media query - mobile*/
 @media (max-width: 766px) {
   .m_none {

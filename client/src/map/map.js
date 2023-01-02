@@ -19,7 +19,7 @@ import { FaChevronRight } from "react-icons/fa";
 const { kakao } = window;
 
 const MapTest = (props) => {
-  const nodeURL = "http://localhost:3001";
+  const nodeURL = "https://www.eatcook.today/api";
 
   const [cityName, setCityName] = useState("");
 
