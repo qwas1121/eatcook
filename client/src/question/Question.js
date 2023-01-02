@@ -6,6 +6,7 @@ import { createSearchParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 
 import { Steps } from "antd";
+import { formatCountdown } from "antd/lib/statistic/utils";
 const { Step } = Steps;
 
 const Question = () => {
@@ -18,34 +19,24 @@ const Question = () => {
   const [result, setResult] = useState(ResultData);
   const [resultFood, setResultFood] = useState();
 
-  useEffect(() => {
-    // setTotalScore(ResultData);
-    //console.log(resultFood);
-  }, []);
+  useEffect(() => {}, []);
 
   const handleClickButton = (no, type) => {
-    // const newScore = ResultData.filter((s) => s.contents.includes(type));
     const newScore = result.filter((s) => s.contents.includes(type));
     setResult(newScore);
     setSubQ(type);
-
-    //console.log(newScore);
 
     if (QuestionData.length !== questionNo + 1) {
       if (QuestionData[questionNo].subquestion === false) {
         setQuestionNo(questionNo + 1);
       } else {
         setQuestionNo(questionNo + 0);
-        // console.log(subOn);
-
         if (type === "육류") {
           setQuestionNo(questionNo + 1);
         } else {
           setQuestionNo(questionNo + 2);
         }
       }
-
-      //setQuestionNo(questionNo + 1);
     } else {
       // food 도출
       const food = newScore
@@ -61,13 +52,33 @@ const Question = () => {
       // });
       setResultFood(food);
       if (no === 8) {
-        //결과페이지 이동
-        navigate({
-          pathname: "/result",
-          search: `?${createSearchParams({
-            food: food,
-          })}`,
-        });
+        if (food.length === 0) {
+          navigate("/resultNo", { state: type });
+        } else if (food.length > 3) {
+          var newnum = [];
+          for (var i = 0; i < 3; i++) {
+            var movenum = food.splice(
+              Math.floor(Math.random() * food.length),
+              1
+            )[0];
+            newnum.push(movenum);
+          }
+
+          //결과페이지 이동
+          navigate({
+            pathname: "/result",
+            search: `?${createSearchParams({
+              food: newnum,
+            })}`,
+          });
+        } else {
+          navigate({
+            pathname: "/result",
+            search: `?${createSearchParams({
+              food: food,
+            })}`,
+          });
+        }
       }
     }
   };

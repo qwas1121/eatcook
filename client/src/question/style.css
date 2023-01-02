@@ -278,6 +278,45 @@
   background-color: transparent;
 }
 
+/*결과 없을 때*/
+.result_inner.resultNo_inner .slider_wrap .food_list .food_list_inner {
+  padding: 0;
+  text-align: center;
+  position: relative;
+}
+.result_inner.resultNo_inner .slider_wrap .text_wrap {
+  padding: 0;
+  width: 100%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.result_inner.resultNo_inner .no_title {
+  font-size: 27.27px;
+  color: #1f392a;
+  font-weight: 600;
+  letter-spacing: -0.05em;
+}
+.result_inner.resultNo_inner .no_text {
+  font-size: 18px;
+  color: #1f392a;
+  line-height: 130%;
+  margin-top: 15px;
+  font-weight: 500;
+}
+.result_inner.resultNo_inner .no_btn_wrap {
+  position: absolute;
+  width: 100%;
+  bottom: 20px;
+  left: 0;
+  right: 0;
+}
+.result_inner.resultNo_inner .bt_btn {
+  margin: 20px 0 0;
+}
+
+/*--------------media query -----------*/
 @media (max-width: 1024px) {
   .question_title h2 {
     font-size: 4vw;

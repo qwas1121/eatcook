@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 
 const KakaoShareButton = ({ food }) => {
   useEffect(() => {
@@ -6,6 +6,14 @@ const KakaoShareButton = ({ food }) => {
   }, []);
 
   const createKakaoButton = () => {
+    // if (food === undefined) {
+    //   var description =
+    //     "이 음식 어때?" + "#" + food[0] + "#" + food[1] + "#" + food[2];
+    // } else {
+    //   var description = "좋아하는 음식 찾아보자!";
+    // }
+    var description =
+      "이 음식 어때?" + "#" + food[0] + "#" + food[1] + "#" + food[2];
     // kakao sdk script이 정상적으로 불러와졌으면 window.Kakao로 접근이 가능합니다
     if (window.Kakao) {
       const kakao = window.Kakao;
@@ -21,11 +29,11 @@ const KakaoShareButton = ({ food }) => {
         container: "#kakao-link-btn",
         objectType: "feed",
         content: {
-          title: "타이틀",
-          description:
-            "이 음식 어때?" + "#" + food[0] + "#" + food[1] + "#" + food[2],
+          title: "EatCook",
 
-          imageUrl: "IMAGE_URL", // i.e. process.env.FETCH_URL + '/logo.png'
+          description: description,
+
+          imageUrl: "https://www.eatcook.today/img/kakao.jpg", // i.e. process.env.FETCH_URL + '/logo.png'
           link: {
             mobileWebUrl: window.location.href,
             webUrl: window.location.href,
@@ -38,7 +46,7 @@ const KakaoShareButton = ({ food }) => {
         },
         buttons: [
           {
-            title: "웹으로 보기",
+            title: "지금 바로 확인하기",
             link: {
               mobileWebUrl: window.location.href,
               webUrl: window.location.href,
