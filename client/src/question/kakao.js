@@ -39,11 +39,11 @@ const KakaoShareButton = ({ food }) => {
             webUrl: window.location.href,
           },
         },
-        social: {
-          likeCount: 77,
-          commentCount: 55,
-          sharedCount: 333,
-        },
+        // social: {
+        //   likeCount: 77,
+        //   commentCount: 55,
+        //   sharedCount: 333,
+        // },
         buttons: [
           {
             title: "지금 바로 확인하기",

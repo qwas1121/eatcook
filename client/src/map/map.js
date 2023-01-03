@@ -34,7 +34,7 @@ const MapTest = (props) => {
 
   const [searchParams] = useSearchParams();
   const food = searchParams.getAll("food");
-  const [test, setTest] = useState(food[0]);
+  const [test, setTest] = useState(props.resultData[0].name);
   const [currentSlide, setCurrentSlide] = useState(0);
 
   //네이버 크롤링
@@ -102,7 +102,7 @@ const MapTest = (props) => {
     slidesToScroll: 1,
     arrows: false,
     //beforeChange: (current, next) => setTest(food[0]),
-    beforeChange: (previous, next) => setTest(food[next]),
+    beforeChange: (previous, next) => setTest(props.resultData[next].name),
   };
 
   const settings2 = {
@@ -132,6 +132,7 @@ const MapTest = (props) => {
   useEffect(() => {
     Map();
 
+    //console.log("name", props.resultData[0].name);
     //console.log(props.resultData);
   }, [cityName, cityName2, test, query, isText]);
 

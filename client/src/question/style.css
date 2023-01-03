@@ -580,9 +580,9 @@
     width: 65%;
   }
 
-  #sub_wrap {
+  /* #sub_wrap {
     height: calc(var(--vh, 1vh) * 100);
-  }
+  } */
 
   .resultNo_inner .food_list {
     width: 65% !important;
